@@ -30,7 +30,7 @@ class ApiClient {
     }
 
     // construct request URI
-    var uri = Uri.http(Config.apiDomain, Config.apiPrefix + path);
+    var uri = Uri.https(Config.apiDomain, Config.apiPrefix + path);
 
     // send the request
     final http.Response response;
