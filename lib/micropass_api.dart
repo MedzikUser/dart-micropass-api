@@ -1,7 +1,7 @@
 /// Support for doing something awesome.
 ///
 /// More dartdocs go here.
-library avapi;
+library micropass_api;
 
 export 'src/ciphers.dart';
 export 'src/identity.dart';

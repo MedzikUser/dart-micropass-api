@@ -13,7 +13,7 @@ class ApiClient {
   factory ApiClient(String? accessToken) =>
       ApiClient._create(http.Client(), accessToken);
 
-  /// Send a request to the AwesomeVault API server.
+  /// Send a request to the MicroPass API server.
   Future<http.Response> send(
     String path, {
     String? body,

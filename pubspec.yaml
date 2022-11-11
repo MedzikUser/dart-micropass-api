@@ -1,5 +1,5 @@
-name: avapi
-description: AwesomeVault API Client for Dart
+name: micropass_api
+description: MicroPass API Client for Dart
 version: 0.1.0
 
 environment:

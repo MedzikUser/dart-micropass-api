@@ -15,7 +15,7 @@ class IdentityApi {
 
   final hash = Pbkdf2(iterations: Config.masterPasswordIterations);
 
-  /// Send login request to the AwesomeVault API.
+  /// Send login request to the MicroPass API.
   Future<AuthResponse> login(String email, String masterPassword) async {
     email = email.toLowerCase();
     final emailBytes = Uint8List.fromList(utf8.encode(email));
@@ -44,7 +44,7 @@ class IdentityApi {
     );
   }
 
-  /// Send register request to the AwesomeVault API.
+  /// Send register request to the MicroPass API.
   Future<void> register(
     String email,
     String masterPassword,
@@ -63,7 +63,7 @@ class IdentityApi {
     final String encryptionKey =
         await Pbkdf2(iterations: 1).sha256(masterPasswordBaseHash, salt);
 
-    // encrypt the encryption key using the master password to pass it to AwesomeVault server
+    // encrypt the encryption key using the master password to pass it to MicroPass server
     final String encryptionKeyAes = await AesCbc()
         .encrypt(encryptionKey, secretKey: masterPasswordBaseHash);
 

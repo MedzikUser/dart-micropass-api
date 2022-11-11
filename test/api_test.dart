@@ -1,4 +1,4 @@
-import 'package:avapi/avapi.dart';
+import 'package:micropass_api/micropass_api.dart';
 import 'package:faker/faker.dart';
 import 'package:test/test.dart';
 
