@@ -31,12 +31,16 @@ class ApiClient {
 
     // construct request URI
     var uri = Uri.https(Config.apiDomain, Config.apiPrefix + path);
+    //var uri = Uri.http('localhost:3000', '/api$path');
 
     // send the request
     final http.Response response;
     if (method == 'POST') {
       headers.putIfAbsent('Content-type', () => 'application/json');
       response = await client.post(uri, body: body, headers: headers);
+    } else if (method == 'PATCH') {
+      headers.putIfAbsent('Content-type', () => 'application/json');
+      response = await client.patch(uri, body: body, headers: headers);
     } else if (method == 'GET') {
       response = await client.get(uri, headers: headers);
     } else if (method == 'DELETE') {

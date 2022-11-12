@@ -92,6 +92,17 @@ void main() {
       }
     });
 
+    test('Update', () async {
+      final cipher = Cipher(
+        type: CipherType.login,
+        name: 'Example',
+        username: faker.internet.email(),
+        password: faker.internet.password(),
+      );
+
+      await client.update(ciphers[0], cipher);
+    });
+
     test('Delete', () async {
       for (var id in ciphers) {
         await client.delete(id);

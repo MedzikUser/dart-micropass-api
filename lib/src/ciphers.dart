@@ -24,6 +24,17 @@ class CiphersApi {
     await client.send('/ciphers/insert', body: body, method: 'POST');
   }
 
+  Future<void> update(String id, Cipher cipher) async {
+    final encryptedCipher = await cipher.encrypt(encryptionKey);
+
+    final body = json.encode({
+      'id': id,
+      'data': encryptedCipher,
+    });
+
+    await client.send('/ciphers/update', body: body, method: 'PATCH');
+  }
+
   Future<Cipher> take(String id) async {
     final response = await client.send('/ciphers/get/$id', method: 'GET');
 
