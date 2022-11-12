@@ -24,6 +24,7 @@ class CiphersApi {
     await client.send('/ciphers/insert', body: body, method: 'POST');
   }
 
+  /// Update an existing cipher in the database.
   Future<void> update(String id, Cipher cipher) async {
     final encryptedCipher = await cipher.encrypt(encryptionKey);
 
@@ -35,6 +36,7 @@ class CiphersApi {
     await client.send('/ciphers/update', body: body, method: 'PATCH');
   }
 
+  /// Get a cipher from the database.
   Future<Cipher> take(String id) async {
     final response = await client.send('/ciphers/get/$id', method: 'GET');
 
@@ -43,10 +45,12 @@ class CiphersApi {
     return encryptedCipher.decrypt(encryptionKey);
   }
 
+  /// Delete a cipher from the database.
   Future<void> delete(String id) async {
     await client.send('/ciphers/delete/$id', method: 'DELETE');
   }
 
+  /// Get all user ciphers id from the database.
   Future<List<dynamic>> list(int? lastSync) async {
     final String url;
 
