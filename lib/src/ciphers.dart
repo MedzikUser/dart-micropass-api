@@ -53,14 +53,17 @@ class CiphersApi {
   /// Get all user ciphers id from the database.
   Future<List<dynamic>> list(int? lastSync) async {
     final String url;
+    Map<String, dynamic>? query;
 
     if (lastSync == null) {
       url = '/ciphers/list';
     } else {
-      url = '/ciphers/list?lastSync=$lastSync';
+      url = '/ciphers/list';
+      query = {'lastSync': lastSync.toString()};
     }
 
-    final response = await client.send(url, method: 'GET');
+    final response =
+        await client.send(url, method: 'GET', queryParameters: query);
 
     final jsonMap = json.decode(response.body);
 

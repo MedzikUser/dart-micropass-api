@@ -17,6 +17,7 @@ class ApiClient {
   Future<http.Response> send(
     String path, {
     String? body,
+    Map<String, dynamic>? queryParameters,
     required String method,
   }) async {
     // set headers to the request
@@ -30,8 +31,9 @@ class ApiClient {
     }
 
     // construct request URI
-    var uri = Uri.https(Config.apiDomain, Config.apiPrefix + path);
-    //var uri = Uri.http('localhost:3000', '/api$path');
+    var uri =
+        Uri.https(Config.apiDomain, Config.apiPrefix + path, queryParameters);
+    //var uri = Uri.http('localhost:3000', '/api$path', queryParameters);
 
     // send the request
     final http.Response response;

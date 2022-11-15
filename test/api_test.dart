@@ -86,6 +86,10 @@ void main() {
       ciphers = await client.list(null);
     });
 
+    test('List (Last Sync)', () async {
+      await client.list(0);
+    });
+
     test('Take', () async {
       for (var id in ciphers) {
         await client.take(id);
