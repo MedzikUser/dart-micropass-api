@@ -3,7 +3,7 @@ import 'package:faker/faker.dart';
 import 'package:test/test.dart';
 
 void main() {
-  var email = faker.internet.email();
+  var email = '_demo_${faker.internet.email()}';
   var masterPassword = faker.internet.password();
 
   var accessToken = '';
