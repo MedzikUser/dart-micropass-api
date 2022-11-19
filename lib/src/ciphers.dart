@@ -51,7 +51,7 @@ class CiphersApi {
   }
 
   /// Get all user ciphers id from the database.
-  Future<List<dynamic>> list(int? lastSync) async {
+  Future<CipherListResponse> list(int? lastSync) async {
     final String url;
     Map<String, dynamic>? query;
 
@@ -67,10 +67,26 @@ class CiphersApi {
 
     final jsonMap = json.decode(response.body);
 
-    final ciphers = jsonMap['ciphers'];
+    List<String>? updated;
+    List<String>? deleted;
 
-    return ciphers;
+    if (jsonMap['updated'] != null) {
+      updated = List<String>.from(jsonMap['updated']);
+    }
+
+    if (jsonMap['deleted'] != null) {
+      deleted = List<String>.from(jsonMap['deleted']);
+    }
+
+    return CipherListResponse(updated, deleted);
   }
+}
+
+class CipherListResponse {
+  final List<String>? updated;
+  final List<String>? deleted;
+
+  CipherListResponse(this.updated, this.deleted);
 }
 
 class Cipher {

@@ -31,9 +31,12 @@ class ApiClient {
     }
 
     // construct request URI
-    var uri =
-        Uri.https(Config.apiDomain, Config.apiPrefix + path, queryParameters);
-    //var uri = Uri.http('localhost:3000', '/api$path', queryParameters);
+    var uri = Uri.https(
+      Config.apiDomain,
+      '${Config.apiPrefix}$path',
+      queryParameters,
+    );
+    // uri = Uri.http('localhost:3000', '/api$path', queryParameters);
 
     // send the request
     final http.Response response;

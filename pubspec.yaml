@@ -1,6 +1,6 @@
 name: micropass_api
 description: MicroPass API Client for Dart
-version: 0.1.0
+version: 0.0.0
 
 environment:
   sdk: '>=2.18.2 <3.0.0'

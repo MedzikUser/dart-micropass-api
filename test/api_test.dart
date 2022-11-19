@@ -69,7 +69,7 @@ void main() {
       client = CiphersApi(accessToken, encryptionKey);
     });
 
-    test('Insert', () async {
+    Future<void> insert() async {
       final cipher = Cipher(
         type: CipherType.login,
         name: 'Example',
@@ -78,16 +78,37 @@ void main() {
       );
 
       await client.insert(cipher);
+    }
+
+    test('Insert (1)', () async {
+      await insert();
+    });
+
+    test('Insert (2)', () async {
+      await insert();
     });
 
     var ciphers = [];
 
     test('List', () async {
-      ciphers = await client.list(null);
+      final response = await client.list(null);
+
+      ciphers = response.updated!;
+    });
+
+    var deletedUnix = 0;
+
+    test('Delete (1)', () async {
+      final id = ciphers[0];
+      ciphers.remove(id);
+
+      deletedUnix = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
+
+      await client.delete(id);
     });
 
     test('List (Last Sync)', () async {
-      await client.list(0);
+      await client.list(deletedUnix);
     });
 
     test('Take', () async {
