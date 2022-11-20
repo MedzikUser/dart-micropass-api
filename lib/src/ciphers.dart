@@ -132,7 +132,7 @@ class Cipher {
     );
   }
 
-  String toJson() {
+  Map<String, dynamic> toMap() {
     final Map<String, dynamic> map = {
       'type': type,
       'name': name,
@@ -161,6 +161,36 @@ class Cipher {
     if (directoryId != null) {
       map.putIfAbsent('dir', () => directoryId);
     }
+
+    return map;
+  }
+
+  Map<String, dynamic> toMapFull() {
+    final map = toMap();
+
+    if (id != null) {
+      map.putIfAbsent('id', () => id);
+    }
+
+    if (created != null) {
+      map.putIfAbsent('created', () => created);
+    }
+
+    if (updated != null) {
+      map.putIfAbsent('updated', () => updated);
+    }
+
+    return map;
+  }
+
+  String toJson() {
+    final map = toMap();
+
+    return json.encode(map);
+  }
+
+  String toJsonFull() {
+    final map = toMapFull();
 
     return json.encode(map);
   }
