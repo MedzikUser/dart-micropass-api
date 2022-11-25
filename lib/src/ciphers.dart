@@ -59,7 +59,9 @@ class CiphersApi {
       url = '/ciphers/list';
     } else {
       url = '/ciphers/list';
-      query = {'lastSync': lastSync.toString()};
+      query = {
+        'lastSync': lastSync.toString(),
+      };
     }
 
     final response =
@@ -90,94 +92,48 @@ class CipherListResponse {
 }
 
 class Cipher {
-  final String? id;
-  final int type;
-  final String name;
-  final String? username;
-  final String? password;
-  final String? url;
-  final String? notes;
-  final String? favorite;
-  final String? directoryId;
-  final int? created;
-  final int? updated;
+  String id;
+  String? favorite;
+  String? directory;
+  CipherData data;
+  int created;
+  int updated;
 
   Cipher({
-    this.id,
-    required this.type,
-    required this.name,
-    this.username,
-    this.password,
-    this.url,
-    this.notes,
+    this.id = '',
+    required this.data,
     this.favorite,
-    this.directoryId,
-    this.created,
-    this.updated,
+    this.directory,
+    this.created = 0,
+    this.updated = 0,
   });
 
   factory Cipher.fromMap(Map<String, dynamic> map) {
     return Cipher(
-      id: map["id"],
-      type: map["type"],
-      name: map["name"],
-      username: map["username"],
-      password: map["password"],
-      url: map["url"],
-      notes: map["notes"],
-      favorite: map["favorite"],
-      directoryId: map["dir"],
-      created: map["created"],
-      updated: map["updated"],
+      id: map['id'] ?? '',
+      data: CipherData.fromMap(Map<String, dynamic>.from(map['data'])),
+      favorite: map['favorite'],
+      directory: map['dir'],
+      created: map['created'] ?? 0,
+      updated: map['updated'] ?? 0,
     );
   }
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> map = {
-      'type': type,
-      'name': name,
+      'data': data.toMap(),
     };
 
-    if (username != null) {
-      map.putIfAbsent('username', () => username);
-    }
+    if (id != '') map['id'] = id;
+    if (created != 0) map['created'] = created;
+    if (updated != 0) map['updated'] = updated;
 
-    if (password != null) {
-      map.putIfAbsent('password', () => password);
-    }
-
-    if (url != null) {
-      map.putIfAbsent('url', () => url);
-    }
-
-    if (notes != null) {
-      map.putIfAbsent('notes', () => notes);
+    if (directory != null) {
+      map.putIfAbsent('dir', () => directory);
     }
 
     if (favorite != null) {
       map.putIfAbsent('favorite', () => favorite);
-    }
-
-    if (directoryId != null) {
-      map.putIfAbsent('dir', () => directoryId);
-    }
-
-    return map;
-  }
-
-  Map<String, dynamic> toMapFull() {
-    final map = toMap();
-
-    if (id != null) {
-      map.putIfAbsent('id', () => id);
-    }
-
-    if (created != null) {
-      map.putIfAbsent('created', () => created);
-    }
-
-    if (updated != null) {
-      map.putIfAbsent('updated', () => updated);
     }
 
     return map;
@@ -189,22 +145,109 @@ class Cipher {
     return json.encode(map);
   }
 
-  String toJsonFull() {
-    final map = toMapFull();
-
-    return json.encode(map);
-  }
-
   /// Encrypt the cipher with the given key.
   Future<String> encrypt(String encryptionKey) async {
-    final cipherJson = toJson();
+    final clearText = toJson();
 
     // encrypt the cipher
     final cipherText =
-        await AesCbc().encrypt(cipherJson, secretKey: encryptionKey);
+        await AesCbc().encrypt(clearText, secretKey: encryptionKey);
 
     // return the encrypted cipher
     return cipherText;
+  }
+}
+
+class CipherData {
+  int type;
+  String name;
+  String? note;
+  Map<String, String> fields;
+  TypedFields? typedFields;
+
+  CipherData({
+    required this.type,
+    required this.name,
+    this.note,
+    this.fields = const {},
+    this.typedFields,
+  });
+
+  factory CipherData.fromMap(Map<String, dynamic> map) {
+    return CipherData(
+      type: map['type'],
+      name: map['name'],
+      note: map['note'],
+      fields: Map<String, String>.from(map['fields']),
+      typedFields: TypedFields.fromMap(map['fields']),
+    );
+  }
+
+  factory CipherData.fromJson(String jsonString) {
+    final map = json.decode(jsonString);
+
+    return CipherData.fromMap(map);
+  }
+
+  Map<String, dynamic> toMap() {
+    // copy the fields map, as the fields map is immutable
+    final fields = Map.from(this.fields);
+
+    // add the typed fields to the fields map
+    if (typedFields != null) {
+      fields.addAll(typedFields!.toMap());
+    }
+
+    final Map<String, dynamic> map = {
+      'type': type,
+      'name': name,
+      'fields': fields,
+    };
+
+    if (note != null) map['note'] = note;
+
+    return map;
+  }
+
+  String toJson() {
+    final map = toMap();
+    final jsonString = json.encode(map);
+
+    return jsonString;
+  }
+}
+
+class TypedFields {
+  final String? username;
+  final String? password;
+  final String? otpauth;
+  final String? url;
+
+  TypedFields({
+    this.username,
+    this.password,
+    this.otpauth,
+    this.url,
+  });
+
+  factory TypedFields.fromMap(Map<String, dynamic> map) {
+    return TypedFields(
+      username: map['username'],
+      password: map['password'],
+      otpauth: map['otpauth'],
+      url: map['url'],
+    );
+  }
+
+  Map<String, String> toMap() {
+    final Map<String, String> map = {};
+
+    if (username != null) map['username'] = username!;
+    if (password != null) map['password'] = password!;
+    if (otpauth != null) map['otpauth'] = otpauth!;
+    if (url != null) map['url'] = url!;
+
+    return map;
   }
 }
 
@@ -230,13 +273,14 @@ class EncryptedCipher {
   Future<Cipher> decrypt(String secretKey) async {
     final clearText = await AesCbc().decrypt(data, secretKey: secretKey);
 
-    final cipher = json.decode(clearText);
+    final cipherMap = json.decode(clearText);
+    final cipher = Cipher.fromMap(cipherMap);
 
-    cipher["id"] = id;
-    cipher["created"] = created;
-    cipher["updated"] = updated;
+    cipher.id = id;
+    cipher.created = created;
+    cipher.updated = updated;
 
-    return Cipher.fromMap(cipher);
+    return cipher;
   }
 }
 

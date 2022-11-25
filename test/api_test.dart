@@ -71,10 +71,13 @@ void main() {
 
     Future<void> insert() async {
       final cipher = Cipher(
-        type: CipherType.login,
-        name: 'Example',
-        username: faker.internet.email(),
-        password: faker.internet.password(),
+        data: CipherData(
+            type: CipherType.login,
+            name: 'Example',
+            typedFields: TypedFields(
+              username: faker.internet.email(),
+              password: faker.internet.password(),
+            )),
       );
 
       await client.insert(cipher);
@@ -119,10 +122,16 @@ void main() {
 
     test('Update', () async {
       final cipher = Cipher(
-        type: CipherType.login,
-        name: 'Example',
-        username: faker.internet.email(),
-        password: faker.internet.password(),
+        data: CipherData(
+            type: CipherType.login,
+            name: 'Example',
+            fields: {
+              'Custom': 'Text in the custom field',
+            },
+            typedFields: TypedFields(
+              username: faker.internet.email(),
+              password: faker.internet.password(),
+            )),
       );
 
       await client.update(ciphers[0], cipher);
